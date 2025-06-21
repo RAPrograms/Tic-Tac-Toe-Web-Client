@@ -3,6 +3,7 @@
     import { screen } from "../lib/state";
 
     import Button from "../components/Button.svelte";
+    
 </script>
 
 <div class="screen" transition:fade>
@@ -11,11 +12,11 @@
         <h1>TIC TAC TOE</h1>
     </header>
     <main>
-        <Button onclick={() => {screen.set("singleplayer")}}>Singleplayer</Button>
-        <Button onclick={() => {}}>Multiplayer</Button>
+        <Button onclick={() => {screen.set("singleplayer")}} enabled={true}>Singleplayer</Button>
+        <Button onclick={() => {}} enabled={false}>Multiplayer</Button>
         <br>
-        <Button onclick={() => {}}>Replayer</Button>
-        <Button onclick={() => {}}>Settings</Button>
+        <Button onclick={() => {}} enabled={false}>Replayer</Button>
+        <Button onclick={() => {}} enabled={false}>Settings</Button>
     </main>
 </div>
 

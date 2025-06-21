@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Snippet } from "svelte";
+    import { onMount, type Snippet } from "svelte";
 
-    const { children, onclick = () => {} } : { children: Snippet, onclick: () => void | undefined } = $props()
+    const { children, onclick = () => {}, enabled = true } : { children: Snippet, onclick: () => void | undefined, enabled: Promise<boolean> | boolean | undefined } = $props()
 
     function handleClick(e: Event){
         const target: HTMLElement = e.target as HTMLElement
@@ -11,9 +11,21 @@
 
         onclick()
     }
+
+    let disabled = $state(true)
+
+    onMount(async () => {
+        if(!(enabled instanceof Promise)){
+            disabled = !enabled
+            return
+        }
+        
+        disabled = !(await enabled)
+    })
+
 </script>
 
-<button onclick={handleClick}>{@render children()}</button>
+<button {disabled} onclick={handleClick}>{@render children()}</button>
 
 <style lang="scss">
     @import "../variables.scss";
@@ -27,9 +39,14 @@
         position: relative;
         font-weight: bold;
         overflow: hidden;
-        cursor: pointer;
         border: none;
         width: 100%;
+
+        &:disabled{opacity: .7; }
+        &:not(:disabled){
+            transition: 300ms opacity ease-out;
+            cursor: pointer;
+        }
 
         &::after{
             background-color: rgba(0, 0, 0, 0.267);

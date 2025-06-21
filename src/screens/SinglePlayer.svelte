@@ -22,13 +22,13 @@
         <Board instance={gameInstance} />
 
         <div class="bnt">
-            <Button onclick={() => {gameInstance!.reset()}}>Restart</Button>
+            <Button onclick={() => {gameInstance!.reset()}} enabled={true}>Restart</Button>
         </div>
     </MenuLayout>
 {:else}
     <MenuLayout title="Singleplayer" onExit={() => screen.set("main")}>
         <div class="bnt">
-            <Button onclick={() => {
+            <Button enabled={true} onclick={() => {
                 gameInstance = GameInstance.new(3)
                 turn = gameInstance.turn
             }}>New Game</Button>
