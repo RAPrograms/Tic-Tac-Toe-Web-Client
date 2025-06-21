@@ -1,10 +1,11 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
+    import { fade } from "svelte/transition";
 
     const { onExit = () => {}, title, children } : { title: string, onExit: () => void, children: Snippet } = $props()
 </script>
 
-<div class="layout">
+<div class="layout screen" transition:fade>
     <header>
         <button aria-label="Exit" onclick={onExit}>
             <svg viewBox="0 0 30 55" fill="none" xmlns="http://www.w3.org/2000/svg">

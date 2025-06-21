@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
+    import { screen } from "../lib/state";
+
     function animateButtonClick(e: Event){
         const target: HTMLElement = e.target
         if(target.tagName != "BUTTON")
@@ -9,23 +12,32 @@
     }
 </script>
 
-<header>
-    <span>Welcome To</span>
-    <h1>TIC TAC TOE</h1>
-</header>
+<div class="screen" transition:fade>
+    <header>
+        <span>Welcome To</span>
+        <h1>TIC TAC TOE</h1>
+    </header>
 
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<main onclick={animateButtonClick}>
-    <button>Singleplayer</button>
-    <button>Multiplayer</button>
-    <br>
-    <button>Replayer</button>
-    <button>Settings</button>
-</main>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+    <main onclick={animateButtonClick}>
+        <button onclick={() => {screen.set("singleplayer-menu")}}>Singleplayer</button>
+        <button>Multiplayer</button>
+        <br>
+        <button>Replayer</button>
+        <button>Settings</button>
+    </main>
+</div>
 
 <style lang="scss">
     @import "../variables.scss";
+
+    .screen{
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+    }
 
     header{
         & > h1{ line-height: 20px; }
