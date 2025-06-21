@@ -50,7 +50,7 @@
 
     @keyframes circularPulse {
         0% {width: 0%; opacity: 1;}
-        60% {width: 100%; opacity: 1;}
-        100% {width: 100%; opacity: 0;}
+        60% {width: 110%; opacity: 1;}
+        100% {width: 110%; opacity: 0;}
     }
 </style>
