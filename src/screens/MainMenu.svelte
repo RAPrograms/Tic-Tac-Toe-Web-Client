@@ -11,7 +11,7 @@
         <h1>TIC TAC TOE</h1>
     </header>
     <main>
-        <Button onclick={() => {screen.set("singleplayer-menu")}}>Singleplayer</Button>
+        <Button onclick={() => {screen.set("singleplayer")}}>Singleplayer</Button>
         <Button onclick={() => {}}>Multiplayer</Button>
         <br>
         <Button onclick={() => {}}>Replayer</Button>

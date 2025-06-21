@@ -5,7 +5,7 @@
     const { onExit = () => {}, title, children } : { title: string, onExit: () => void, children: Snippet } = $props()
 </script>
 
-<div class="layout screen" transition:fade>
+<div data-menu={title.toLowerCase().split(" ").join("-")} class="layout screen" transition:fade>
     <header>
         <button aria-label="Exit" onclick={onExit}>
             <svg viewBox="0 0 30 55" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,6 +24,9 @@
     @import "../variables.scss";
 
     div.layout{
+        flex-direction: column;
+        display: flex;
+
         & > header{
             $height: 50px;
 
@@ -65,8 +68,13 @@
         }
 
         & > section{
+            flex-direction: column;
             box-sizing: border-box;
+            align-items: center;
             padding: 10px;
+            display: flex;
+            flex-grow: 1;
+            gap: 20px;
         }
     }
 </style>

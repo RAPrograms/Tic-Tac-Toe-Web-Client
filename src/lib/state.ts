@@ -1,5 +1,5 @@
 import { writable, type Writable } from "svelte/store";
 
-type screens = "main" | "singleplayer-menu" | "multiplayer-menu"
+type screens = "main" | "singleplayer" | "multiplayer"
 
 export const screen: Writable<screens> = writable("main")
