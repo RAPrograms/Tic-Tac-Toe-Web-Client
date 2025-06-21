@@ -27,6 +27,7 @@
         & > header{
             $height: 50px;
 
+            box-shadow: 0 10px 5px -9px rgba(0, 0, 0, 0.3);
             background-color: $header;
             box-sizing: border-box;
             padding-right: $height;
