@@ -40,7 +40,7 @@
         flex-direction: column;
         display: flex;
         width: 300px;
-        gap: 15px;
+        gap: 20px;
     }
 </style>
 
