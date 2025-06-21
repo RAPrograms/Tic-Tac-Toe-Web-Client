@@ -2,14 +2,7 @@
     import { fade } from "svelte/transition";
     import { screen } from "../lib/state";
 
-    function animateButtonClick(e: Event){
-        const target: HTMLElement = e.target
-        if(target.tagName != "BUTTON")
-            return
-
-        target.classList.add("clicked")
-        setTimeout(() => { target.classList.remove("clicked") }, 440)
-    }
+    import Button from "../components/Button.svelte";
 </script>
 
 <div class="screen" transition:fade>
@@ -17,15 +10,12 @@
         <span>Welcome To</span>
         <h1>TIC TAC TOE</h1>
     </header>
-
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-    <main onclick={animateButtonClick}>
-        <button onclick={() => {screen.set("singleplayer-menu")}}>Singleplayer</button>
-        <button>Multiplayer</button>
+    <main>
+        <Button onclick={() => {screen.set("singleplayer-menu")}}>Singleplayer</Button>
+        <Button onclick={() => {}}>Multiplayer</Button>
         <br>
-        <button>Replayer</button>
-        <button>Settings</button>
+        <Button onclick={() => {}}>Replayer</Button>
+        <Button onclick={() => {}}>Settings</Button>
     </main>
 </div>
 
@@ -47,46 +37,10 @@
     }
 
     main{
-        display: flex;
         flex-direction: column;
-        gap: 15px;
+        display: flex;
         width: 300px;
-
-        & > button{
-            background-color: $primary;
-            border: none;
-            box-shadow: 0 10px 5px -7px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            font-weight: bold;
-            font-size: min(1rem, 20px);
-            padding: 20px 30px;
-            width: 100%;
-            border-radius: 10px;
-
-            position: relative;
-            overflow: hidden;
-
-            &::after{
-                background-color: rgba(0, 0, 0, 0.267);
-                translate: -50% -50%;
-                border-radius: 100%;
-                position: absolute;
-                aspect-ratio: 1/1;
-                content: "";
-                left: 50%;
-                top: 50%;
-            }
-
-            &:global(.clicked::after){
-                animation: example .44s linear;
-            }
-        }
-    }
-
-    @keyframes example {
-        0% {width: 0%; opacity: 1;}
-        60% {width: 100%; opacity: 1;}
-        100% {width: 100%; opacity: 0;}
+        gap: 15px;
     }
 </style>
 
