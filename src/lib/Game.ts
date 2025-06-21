@@ -19,6 +19,11 @@ export default class GameInstance{
         return new this(size, board)
     }
 
+    reset(){
+        this.#board.set(new Array(this.#size**2).fill(-1))
+        this.#turn.set(0)
+    }
+
     /**
      * Get the cell's position on the board
      * 

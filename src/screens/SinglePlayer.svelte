@@ -18,11 +18,16 @@
                 team turn
             </h2>
         </header>
-        <Board instance={gameInstance}/>
+
+        <Board instance={gameInstance} />
+
+        <div class="bnt">
+            <Button onclick={() => {gameInstance!.reset()}}>Restart</Button>
+        </div>
     </MenuLayout>
 {:else}
     <MenuLayout title="Singleplayer" onExit={() => screen.set("main")}>
-        <div class="new-game-bnt">
+        <div class="bnt">
             <Button onclick={() => {
                 gameInstance = GameInstance.new(3)
                 turn = gameInstance.turn
@@ -33,7 +38,7 @@
 
 
 <style lang="scss">
-    div.new-game-bnt{
+    div.bnt{
         margin: 10px auto;
         max-width: 300px;
     }
