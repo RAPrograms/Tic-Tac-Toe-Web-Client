@@ -55,9 +55,11 @@ export default class GameInstance{
         else if([4, 1, -2].includes(movement) && column == this.#size -1)
             return -1
 
+        //Up check
         if(movement < -1 && row == 0)
             return -1
 
+        //Down check
         else if(movement > 1 && row == this.#size -1)
             return -1
 
@@ -84,19 +86,9 @@ export default class GameInstance{
         if(team == -1)
             return 
 
-        const directionPairs = [
-            [-4, 4],
-            [-3, 3],
-            [-2, 2],
-            [-1, 1]
-        ]
-
-        for(let i=0; i<directionPairs.length; i++){
-            const [first, second] = directionPairs[i] as Array<directions>
-
-
-            const one = this.getPath(index, first, (team as 0 | 1))
-            const two = this.getPath(index, second, (team as 0 | 1), true)
+        for(let i=1; i<=4; i++){
+            const one = this.getPath(index, i as directions, (team as 0 | 1))
+            const two = this.getPath(index, i * -1 as directions, (team as 0 | 1), true)
             one.pop()
 
             const result = [...one, ...two]
