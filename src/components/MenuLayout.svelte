@@ -25,6 +25,7 @@
 
     div.layout{
         flex-direction: column;
+        isolation: isolate;
         display: flex;
 
         & > header{
@@ -34,8 +35,12 @@
             background-color: $header;
             box-sizing: border-box;
             padding-right: $height;
+            position: sticky;
             display: flex;
             height: 50px;
+            z-index: 1;
+            left: 0;
+            top: 0;
 
 
             & > button{
@@ -74,6 +79,7 @@
             padding: 10px;
             display: flex;
             flex-grow: 1;
+            z-index: 0;
             gap: 20px;
         }
     }
