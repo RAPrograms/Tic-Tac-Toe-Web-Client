@@ -4,13 +4,12 @@
 
     const {
         instance,
-        onCellSelect = (index: number) => {},
+        onCellSelect = (index: number, finished: boolean) => {},
         onFinish = (team: 0 | 1 | -1) => {},
         disabled = false,
-        
     } : {
         instance: GameInstance,
-        onCellSelect: (index: number) => boolean | void,
+        onCellSelect: (index: number, finished: boolean) => void,
         onFinish: (team: 0 | 1 | -1) => void,
         disabled: boolean
     } = $props()
@@ -25,10 +24,6 @@
     }
 
     function handle_cell_selection(index: number){
-        if(onCellSelect(index) == false)
-            return
-        
-
         try {
             instance.setCellClaim(index, get(instance.turn))
             instance.setTurn()
@@ -37,17 +32,21 @@
         }
 
         winningPath.set(instance.getWinningPath(index))
-        
+
         if($winningPath != undefined){
             const team = $board[$winningPath![0]] 
-            onFinish(team as 0 | 1 | -1)
+            onCellSelect(index, true)
+            onFinish(team as 0 | 1)
             return
         }
 
         if(instance.emptyCellCount <= 0){
+            onCellSelect(index, true)
             onFinish(-1)
             return
         }
+
+        onCellSelect(index, false)
     }
 </script>
 

@@ -17,6 +17,17 @@
         turn = instance.turn
     }
 
+    function saveGame(index: number, finished: boolean){
+        if(finished)
+            return
+
+        console.log("Saving")
+    }
+
+    function archiveGame(team: 0 | 1 | -1){
+        console.log("Archiving game")
+    }
+
 
     function fakegen(){
         const instance = GameInstance.new(3)
@@ -43,7 +54,7 @@
             </h2>
         </header>
 
-        <Board instance={gameInstance} onCellSelect={saveGame} onFinish={() => {}} disabled={false} bind:this={boardInstance} />
+        <Board instance={gameInstance} onCellSelect={saveGame} onFinish={archiveGame} disabled={false} bind:this={boardInstance} />
 
         <div class="bnt">
             <Button onclick={() => boardInstance?.reset()} enabled={true}>Restart</Button>
@@ -58,7 +69,7 @@
         <section class="continue-game">
             {#each fakeDB as instance}
                 <button onclick={() => openGame(instance) }>
-                    <Board {instance} disabled={true} onCellSelect={() => false} onFinish={() => {}}/>
+                    <Board {instance} disabled={true} onCellSelect={() => {}} onFinish={() => {}}/>
                     <div>12 june 2025</div>
                 </button>
             {/each}
