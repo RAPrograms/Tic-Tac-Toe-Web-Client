@@ -16,6 +16,7 @@
         <Button onclick={() => {}} enabled={false}>Multiplayer</Button>
         <br>
         <Button onclick={() => {screen.set("settings")}} enabled={true}>Settings</Button>
+        <a class="credit" href="https://github.com/RAPrograms/Tic-Tac-Toe-Web-Client" target="_blank" rel="noopener noreferrer">RAPrograms</a>
     </main>
 </div>
 
@@ -41,6 +42,12 @@
         display: flex;
         width: 300px;
         gap: 20px;
+
+        & > .credit{
+            text-align: center;
+            text-decoration: none;
+            color: white;
+        }
     }
 </style>
 
