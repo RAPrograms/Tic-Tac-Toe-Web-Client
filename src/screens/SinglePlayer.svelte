@@ -42,7 +42,7 @@
             </h2>
         </header>
 
-        <Board instance={gameInstance} onCellSelect={() => {}} onFinish={() => {}} />
+        <Board instance={gameInstance} onCellSelect={() => {}} onFinish={() => {}} disabled={false} />
 
         <div class="bnt">
             <Button onclick={() => {gameInstance!.reset()}} enabled={true}>Restart</Button>
@@ -57,7 +57,7 @@
         <section class="continue-game">
             {#each fakeDB as instance}
                 <button onclick={() => openGame(instance) }>
-                    <Board {instance} onCellSelect={() => false} onFinish={() => {}}/>
+                    <Board {instance} disabled={true} onCellSelect={() => false} onFinish={() => {}}/>
                     <div>12 june 2025</div>
                 </button>
             {/each}

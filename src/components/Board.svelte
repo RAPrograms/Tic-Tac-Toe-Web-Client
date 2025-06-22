@@ -5,11 +5,13 @@
     const {
         instance,
         onCellSelect = (index: number) => {},
-        onFinish = (team: 0 | 1 | -1) => {}
+        onFinish = (team: 0 | 1 | -1) => {},
+        disabled = false
     } : {
         instance: GameInstance,
         onCellSelect: (index: number) => boolean | void,
-        onFinish: (team: 0 | 1 | -1) => void
+        onFinish: (team: 0 | 1 | -1) => void,
+        disabled: boolean
     } = $props()
 
    
@@ -20,7 +22,7 @@
         if(onCellSelect(index) == false)
             return
         
-            
+
         try {
             instance.setCellClaim(index, get(instance.turn))
             instance.setTurn()
@@ -49,7 +51,7 @@
 <div class="board">
     <section>
         {#each $board as team, i}
-            <button aria-label="Cell {i}" style="--colour: {$winningPath != undefined && $winningPath.includes(i)? "green":"unset"}" disabled={team != -1 || $winningPath != undefined} onclick={() => {handle_cell_selection(i)}}>
+            <button aria-label="Cell {i}" style="--colour: {$winningPath != undefined && $winningPath.includes(i)? "green":"unset"}" disabled={disabled || team != -1 || $winningPath != undefined} onclick={() => {handle_cell_selection(i)}}>
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     {#if team == 0}
                         <path fill="cyan" xmlns="http://www.w3.org/2000/svg" d="M89.6333 1.46445C91.586 -0.488097 94.751 -0.488133 96.7036 1.46445L98.7515 3.51133C100.704 5.46393 100.704 8.63001 98.7515 10.5826L59.2261 50.1061L98.7515 89.6305C100.704 91.5831 100.704 94.7492 98.7515 96.7018L96.7036 98.7486C94.751 100.701 91.586 100.701 89.6333 98.7486L50.1079 59.2242L10.5835 98.7486C8.63087 100.701 5.46486 100.701 3.51222 98.7486L1.46437 96.7018C-0.488158 94.7492 -0.488073 91.5831 1.46437 89.6305L40.9888 50.1061L1.46437 10.5826C-0.488085 8.63002 -0.488161 5.46388 1.46437 3.51133L3.51222 1.46445C5.46486 -0.488151 8.63087 -0.488151 10.5835 1.46445L50.1079 40.9879L89.6333 1.46445Z"/>
