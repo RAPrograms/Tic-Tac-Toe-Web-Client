@@ -19,7 +19,7 @@
             </h2>
         </header>
 
-        <Board instance={gameInstance} />
+        <Board instance={gameInstance} onCellSelect={() => {}} onFinish={() => {}} />
 
         <div class="bnt">
             <Button onclick={() => {gameInstance!.reset()}} enabled={true}>Restart</Button>

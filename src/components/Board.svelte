@@ -2,7 +2,15 @@
     import { get, writable, type Writable } from "svelte/store";
     import GameInstance from "../lib/Game";
 
-    const { instance } : { instance: GameInstance } = $props()
+    const {
+        instance,
+        onCellSelect = (index: number) => {},
+        onFinish = (team: 0 | 1 | -1) => {}
+    } : {
+        instance: GameInstance,
+        onCellSelect: (index: number) => void,
+        onFinish: (team: 0 | 1 | -1) => void
+    } = $props()
 
    
     const winningPath: Writable<undefined | Array<number>> = writable(undefined)
@@ -17,6 +25,19 @@
         }
 
         winningPath.set(instance.getWinningPath(index))
+        onCellSelect(index)
+
+
+        if($winningPath != undefined){
+            const team = $board[$winningPath![0]] 
+            onFinish(team as 0 | 1 | -1)
+            return
+        }
+
+        if(instance.emptyCellCount <= 0){
+            onFinish(-1)
+            return
+        }
     }
 </script>
 

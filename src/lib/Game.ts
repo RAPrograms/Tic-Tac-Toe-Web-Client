@@ -6,11 +6,14 @@ export default class GameInstance{
     #size: number
     #board: Writable<Array<number>>
     #turn: Writable<0 | 1>
+    #emptyCellCount: number
 
     constructor(size: number, board: Array<number>, turn: 0 | 1 = 0){
         this.#size = size
         this.#board = writable(board)
         this.#turn = writable(turn)
+
+        this.#emptyCellCount = this.calculateEmptyCells()
     }
 
     static new(size: number) {
@@ -97,6 +100,19 @@ export default class GameInstance{
         }
     }
 
+
+    private calculateEmptyCells(){
+        const board = get(this.board)
+        let count = board.length
+
+        for(let i=0; i<board.length; i++){
+            if(board[i] != -1)
+                count -= 1
+        }
+
+        return count
+    }
+
     /**
      * Sets a cell's claim
      * 
@@ -115,9 +131,13 @@ export default class GameInstance{
             return
         }
 
-        board[index] = team as 0 | 1 | -1
+        if(board[index] == team)
+            return
 
+        board[index] = team as 0 | 1 | -1
         this.#board.set(board)
+
+        this.#emptyCellCount += (team == -1)? 1 : -1
     }
 
     /**
@@ -133,6 +153,9 @@ export default class GameInstance{
     }
 
     
+    get emptyCellCount(){
+        return this.#emptyCellCount
+    }
 
     get size(){
         return this.#size
