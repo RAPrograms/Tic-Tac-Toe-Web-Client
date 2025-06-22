@@ -16,7 +16,7 @@
         <Button onclick={() => {}} enabled={false}>Multiplayer</Button>
         <br>
         <Button onclick={() => {}} enabled={false}>Replayer</Button>
-        <Button onclick={() => {}} enabled={false}>Settings</Button>
+        <Button onclick={() => {screen.set("settings")}} enabled={true}>Settings</Button>
     </main>
 </div>
 
