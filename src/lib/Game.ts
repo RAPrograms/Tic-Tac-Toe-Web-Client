@@ -202,6 +202,7 @@ export default class GameInstance{
 
         const [stores, transaction] = storesInstance 
         const store = stores["active"]
+        stores["active"].getAll()
 
         if(this.#id == undefined)
             this.#id = await database.generateID(store)
@@ -211,11 +212,34 @@ export default class GameInstance{
                 size: this.#size,
                 board: get(this.#board),
                 turn: get(this.turn),
-                id: this.#id,
-                lastSave: new Date
+                id: this.#id
             })
         )
         
+    }
+
+    static async getAllActive(){
+        const storesInstance = await database.openDataStores('active', "readwrite")
+        if(storesInstance == undefined)
+            return []
+
+        const [stores, transaction] = storesInstance 
+        const data = await database.toRequestPromise<Record<string, any>[]>(stores["active"].getAll())
+        if(data == null)
+            return []
+
+        const output = []
+        for(let i=0; i<data.length; i++){
+            const game = data[i]
+            output.push(new this(
+                game["size"],
+                game["board"],
+                game["turn"],
+                game["id"]
+            ))
+        }
+
+        return output
     }
 
  

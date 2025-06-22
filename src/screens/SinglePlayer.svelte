@@ -27,22 +27,6 @@
     function archiveGame(team: 0 | 1 | -1){
         console.log("Archiving game")
     }
-
-
-    function fakegen(){
-        const instance = GameInstance.new(3)
-        for(let i=0; i<8; i++){
-            const team = Math.round(i % 2)
-            const index = Math.round(Math.random() * 9) 
-            try {
-                instance.setCellClaim(index, team as 0 | 1 | -1 | undefined)
-            } catch (error) {}
-        }
-
-        return instance
-    }
-
-    const fakeDB = Array(100).fill(undefined).map(() => fakegen())
 </script>
 
 {#if gameInstance}
@@ -67,12 +51,17 @@
         </div>
 
         <section class="continue-game">
-            {#each fakeDB as instance}
-                <button onclick={() => openGame(instance) }>
-                    <Board {instance} disabled={true} onCellSelect={() => {}} onFinish={() => {}}/>
-                    <div>12 june 2025</div>
-                </button>
-            {/each}
+            {#await GameInstance.getAllActive()}
+               {#each {length: 10} as _}
+                    <div class="placeholder"></div>
+               {/each}
+            {:then games} 
+                {#each games as instance}
+                    <button onclick={() => openGame(instance) }>
+                        <Board {instance} disabled={true} onCellSelect={() => {}} onFinish={() => {}}/>
+                    </button>
+                {/each}
+            {/await}
         </section>
     </MenuLayout>
 {/if}
@@ -103,22 +92,21 @@
         z-index: 0;
         gap: 20px;
 
-        & > button{
+        & > button, & > .placeholder{
             background: rgba(162, 162, 162, 0.466);
-            transition: 400ms box-shadow ease-out;
-            box-shadow: 0px 0px 0px -10px white;
-            padding: 20px 20px 10px 20px;
             backdrop-filter: blur(10px);
             box-sizing: border-box;
             border-radius: 20px;
-            cursor: pointer;
+            aspect-ratio: 1/1;
+            padding: 20px;
+            width: 190px;
             border: none;
+        }
 
-            & > div{
-                font-weight: bold;
-                margin-top: 10px;
-                font-size: 20px;
-            }
+        & > button{
+            transition: 400ms box-shadow ease-out;
+            box-shadow: 0px 0px 0px -10px white;
+            cursor: pointer;
 
             & > :global(.board){
                 pointer-events: none;
@@ -129,5 +117,17 @@
                 transition: 150ms box-shadow ease-in;
             }
         }
+
+        & > .placeholder{
+            animation: pulsing 1s infinite ease-in-out alternate;
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+        }
+    }
+
+    @keyframes pulsing{
+        from {opacity: .7}
+        to {opacity: .3;}
     }
 </style>
