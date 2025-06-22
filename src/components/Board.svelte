@@ -6,7 +6,8 @@
         instance,
         onCellSelect = (index: number) => {},
         onFinish = (team: 0 | 1 | -1) => {},
-        disabled = false
+        disabled = false,
+        
     } : {
         instance: GameInstance,
         onCellSelect: (index: number) => boolean | void,
@@ -17,6 +18,11 @@
    
     const winningPath: Writable<undefined | Array<number>> = writable(undefined)
     const board = instance.board
+
+    export function reset(){
+        winningPath.set(undefined)
+        instance.reset()
+    }
 
     function handle_cell_selection(index: number){
         if(onCellSelect(index) == false)
@@ -32,8 +38,6 @@
 
         winningPath.set(instance.getWinningPath(index))
         
-
-
         if($winningPath != undefined){
             const team = $board[$winningPath![0]] 
             onFinish(team as 0 | 1 | -1)

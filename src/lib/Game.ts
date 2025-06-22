@@ -23,8 +23,10 @@ export default class GameInstance{
     }
 
     reset(){
-        this.#board.set(new Array(this.#size**2).fill(-1))
+        const length = this.#size**2
+        this.#board.set(new Array(length).fill(-1))
         this.#turn.set(0)
+        this.#emptyCellCount = length
     }
 
     /**
@@ -100,6 +102,19 @@ export default class GameInstance{
         }
     }
 
+    /**
+     * Searches the entire board to find any winning paths
+     * 
+     * This is not efficient! Please use getWinningPath(index) if you know the cell index
+     */
+    findWinningPath(): Array<number> | undefined{
+        for(let i=(this.#size**2)-1; i>=0; i--){
+            const result = this.getWinningPath(i)
+            if(result)
+                return result
+        }
+    }
+
 
     private calculateEmptyCells(){
         const board = get(this.board)
@@ -152,6 +167,37 @@ export default class GameInstance{
         this.#turn.set(team as 0 | 1)
     }
 
+    /**
+     * Checks if the game is won and by who
+     * 
+     *      undefined: Game is not won
+     *      -1: The game was tied
+     *      0: X team won
+     *      1: O team won
+     */
+    getResults(): 0 | 1 | -1 | undefined{
+        const winningPath = this.findWinningPath()
+        if(winningPath != undefined){
+            const board = get(this.#board)
+            const team = board[winningPath![0]] as 0 | 1
+            return team
+        }
+
+        if(this.emptyCellCount <= 0){
+            return -1
+        }
+    }
+
+    saveActive(force: boolean = false){
+        if(!force && !this.playable){
+            throw Error("This game is not active or playable")
+        }
+    }
+
+ 
+    get playable(){
+        return this.getResults() == undefined
+    }
     
     get emptyCellCount(){
         return this.#emptyCellCount

@@ -10,11 +10,12 @@
     let gameInstance: GameInstance | undefined = undefined
     let turn
 
+    let boardInstance: Board | undefined
+
     function openGame(instance: GameInstance){
         gameInstance = instance
         turn = instance.turn
     }
-
 
 
     function fakegen(){
@@ -42,10 +43,10 @@
             </h2>
         </header>
 
-        <Board instance={gameInstance} onCellSelect={() => {}} onFinish={() => {}} disabled={false} />
+        <Board instance={gameInstance} onCellSelect={saveGame} onFinish={() => {}} disabled={false} bind:this={boardInstance} />
 
         <div class="bnt">
-            <Button onclick={() => {gameInstance!.reset()}} enabled={true}>Restart</Button>
+            <Button onclick={() => boardInstance?.reset()} enabled={true}>Restart</Button>
         </div>
     </MenuLayout>
 {:else}
@@ -106,6 +107,10 @@
                 font-weight: bold;
                 margin-top: 10px;
                 font-size: 20px;
+            }
+
+            & > :global(.board){
+                pointer-events: none;
             }
 
             &:hover{
