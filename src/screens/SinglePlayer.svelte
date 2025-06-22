@@ -6,6 +6,9 @@
 
     import { screen } from "../lib/state";
 
+
+    let gamebackCooldown: string | number | NodeJS.Timeout | undefined
+
     let gameInstance: GameInstance | undefined = undefined
     let turn
 
@@ -14,6 +17,19 @@
     function openGame(instance: GameInstance){
         gameInstance = instance
         turn = instance.turn
+
+        gamebackCooldown = setTimeout(() => {
+            clearTimeout(gamebackCooldown)
+            gamebackCooldown = undefined
+        }, 10000)
+    }
+
+    function exitGame(){
+        if(gamebackCooldown == undefined)
+            return screen.set("main")
+        
+        gameInstance = undefined
+        turn = undefined
     }
 
     function saveGame(index: number, finished: boolean){
@@ -26,7 +42,7 @@
 </script>
 
 {#if gameInstance}
-    <MenuLayout title="Tic Tac Toe" onExit={() => screen.set("main")}>
+    <MenuLayout title="Tic Tac Toe" onExit={exitGame}>
         <header>
             <h2>
                 <span style="color: {$turn == 0? "cyan":"red"}">{$turn == 0? "X":"O"}</span> 
