@@ -23,10 +23,6 @@
         gameInstance?.saveActive()
         console.log("Saving")
     }
-
-    function archiveGame(team: 0 | 1 | -1){
-        console.log("Archiving game")
-    }
 </script>
 
 {#if gameInstance}
@@ -38,7 +34,7 @@
             </h2>
         </header>
 
-        <Board instance={gameInstance} onCellSelect={saveGame} onFinish={archiveGame} disabled={false} bind:this={boardInstance} />
+        <Board instance={gameInstance} onCellSelect={saveGame} onFinish={() => {}} disabled={false} bind:this={boardInstance} />
 
         <div class="bnt">
             <Button onclick={() => boardInstance?.reset()} enabled={true}>Restart</Button>
