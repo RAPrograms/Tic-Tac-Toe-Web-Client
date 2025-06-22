@@ -10,7 +10,10 @@
     let gameInstance: GameInstance | undefined = undefined
     let turn
 
-
+    function openGame(instance: GameInstance){
+        gameInstance = instance
+        turn = instance.turn
+    }
 
 
 
@@ -48,17 +51,15 @@
 {:else}
     <MenuLayout title="Singleplayer" onExit={() => screen.set("main")}>
         <div class="bnt new-game">
-            <Button enabled={true} onclick={() => {
-                gameInstance = GameInstance.new(3)
-                turn = gameInstance.turn
-            }}>New Game</Button>
+            <Button enabled={true} onclick={() => openGame(GameInstance.new(3)) }>New Game</Button>
         </div>
 
         <section class="continue-game">
             {#each fakeDB as instance}
-                <article>
+                <button onclick={() => openGame(instance) }>
                     <Board {instance} onCellSelect={() => false} onFinish={() => {}}/>
-                </article>
+                    <div>12 june 2025</div>
+                </button>
             {/each}
         </section>
     </MenuLayout>
@@ -72,9 +73,10 @@
     }
 
     div.bnt.new-game{
+        position: sticky;
+        z-index: 1;
         top: 0;
         left: 0;
-        position: sticky;
     }
 
     :global([data-menu="tic-tac-toe"]) :global(.board){
@@ -83,9 +85,33 @@
     }
 
     section.continue-game{
-        display: flex;
         justify-content: center;
-        gap: 20px;
         flex-wrap: wrap;
+        display: flex;
+        z-index: 0;
+        gap: 20px;
+
+        & > button{
+            background: rgba(162, 162, 162, 0.466);
+            transition: 400ms box-shadow ease-out;
+            box-shadow: 0px 0px 0px -10px white;
+            padding: 20px 20px 10px 20px;
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+
+            & > div{
+                font-weight: bold;
+                margin-top: 10px;
+                font-size: 20px;
+            }
+
+            &:hover{
+                box-shadow: 0px 0px 30px -10px white;
+                transition: 150ms box-shadow ease-in;
+            }
+        }
     }
 </style>
