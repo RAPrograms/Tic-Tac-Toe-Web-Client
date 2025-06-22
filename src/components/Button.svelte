@@ -33,7 +33,7 @@
     button{
         box-shadow: 0 10px 5px -7px rgba(0, 0, 0, 0.3);
         font-size: min(1rem, 20px);
-        background-color: $primary;
+        background-color: var(--colour, $primary);
         border-radius: 10px;
         padding: 20px 30px;
         position: relative;

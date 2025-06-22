@@ -192,7 +192,7 @@ export default class GameInstance{
     }
 
 
-    async saveActive(force: boolean = false){
+    async save(force: boolean = false){
         if(!force && !this.playable)
             throw Error("This game is not active or playable")
         
@@ -216,6 +216,24 @@ export default class GameInstance{
             })
         )
         
+    }
+
+    async deleteSave(){
+        if(this.#id == undefined){
+            console.warn("Game has no save to delete")
+            return
+        }
+
+        const storesInstance = await database.openDataStores('active', "readwrite")
+        if(storesInstance == undefined){
+            console.error("Unable to open database")
+            return
+        }
+
+        const [stores, transaction] = storesInstance 
+
+        if(await database.toRequestPromise(stores["active"].delete(this.#id)) != undefined)
+            console.error("Unable to delete game")
     }
 
     static async getAllActive(){

@@ -36,8 +36,13 @@
         if(finished)
             return
 
-        gameInstance?.saveActive()
+        gameInstance?.save()
         console.log("Saving")
+    }
+
+    function resetGame(){
+        boardInstance?.reset()
+        gameInstance?.deleteSave()
     }
 </script>
 
@@ -53,7 +58,7 @@
         <Board instance={gameInstance} onCellSelect={saveGame} onFinish={() => {}} disabled={false} bind:this={boardInstance} />
 
         <div class="bnt">
-            <Button onclick={() => boardInstance?.reset()} enabled={true}>Restart</Button>
+            <Button onclick={resetGame} enabled={true}>Restart</Button>
         </div>
     </MenuLayout>
 {:else}
