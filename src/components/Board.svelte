@@ -8,7 +8,7 @@
         onFinish = (team: 0 | 1 | -1) => {}
     } : {
         instance: GameInstance,
-        onCellSelect: (index: number) => void,
+        onCellSelect: (index: number) => boolean | void,
         onFinish: (team: 0 | 1 | -1) => void
     } = $props()
 
@@ -17,6 +17,10 @@
     const board = instance.board
 
     function handle_cell_selection(index: number){
+        if(onCellSelect(index) == false)
+            return
+        
+            
         try {
             instance.setCellClaim(index, get(instance.turn))
             instance.setTurn()
@@ -25,7 +29,7 @@
         }
 
         winningPath.set(instance.getWinningPath(index))
-        onCellSelect(index)
+        
 
 
         if($winningPath != undefined){

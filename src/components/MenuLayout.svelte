@@ -24,23 +24,20 @@
     @import "../variables.scss";
 
     div.layout{
+        --header-height: 50px;
+
         flex-direction: column;
         isolation: isolate;
         display: flex;
 
         & > header{
-            $height: 50px;
-
             box-shadow: 0 10px 5px -9px rgba(0, 0, 0, 0.3);
             background-color: $header;
             box-sizing: border-box;
-            padding-right: $height;
-            position: sticky;
+            padding-right: var(--header-height, 50px);
             display: flex;
             height: 50px;
             z-index: 1;
-            left: 0;
-            top: 0;
 
 
             & > button{
@@ -48,7 +45,7 @@
                 box-sizing: border-box;
                 background: none;
                 cursor: pointer;
-                width: $height;
+                width: var(--header-height, 50px);
                 border: none;
                 padding: 5px;
 
@@ -76,6 +73,7 @@
             flex-direction: column;
             box-sizing: border-box;
             align-items: center;
+            overflow: scroll;
             padding: 10px;
             display: flex;
             flex-grow: 1;
