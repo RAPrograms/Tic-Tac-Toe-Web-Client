@@ -1,8 +1,9 @@
 <script>
-    import { screen } from "./lib/state";
-    import MainMenu from "./screens/MainMenu.svelte";
     import SinglePlayer from "./screens/SinglePlayer.svelte";
     import SettingsMenu from "./screens/SettingsMenu.svelte";
+    import MainMenu from "./screens/MainMenu.svelte";
+    
+    import { screen } from "./lib/state";
 </script>
 
 {#if $screen == "main"}
