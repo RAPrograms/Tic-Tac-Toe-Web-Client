@@ -1,4 +1,5 @@
 import { get, readonly, writable, type Writable } from "svelte/store";
+import { database } from "./state";
 
 type directions = -4 | -3 | -2 | -1 | 1 | 2 | 3 | 4;
 
@@ -7,11 +8,13 @@ export default class GameInstance{
     #board: Writable<Array<number>>
     #turn: Writable<0 | 1>
     #emptyCellCount: number
+    #id: string | undefined
 
-    constructor(size: number, board: Array<number>, turn: 0 | 1 = 0){
+    constructor(size: number, board: Array<number>, turn: 0 | 1 = 0, id: string | undefined = undefined){
         this.#size = size
         this.#board = writable(board)
         this.#turn = writable(turn)
+        this.#id = id
 
         this.#emptyCellCount = this.calculateEmptyCells()
     }
@@ -188,10 +191,31 @@ export default class GameInstance{
         }
     }
 
-    saveActive(force: boolean = false){
-        if(!force && !this.playable){
+
+    async saveActive(force: boolean = false){
+        if(!force && !this.playable)
             throw Error("This game is not active or playable")
-        }
+        
+        const storesInstance = await database.openDataStores('active', "readwrite")
+        if(storesInstance == undefined)
+            return
+
+        const [stores, transaction] = storesInstance 
+        const store = stores["active"]
+
+        if(this.#id == undefined)
+            this.#id = await database.generateID(store)
+        
+        await database.toRequestPromise<IDBValidKey>(
+            store.put({
+                size: this.#size,
+                board: get(this.#board),
+                turn: get(this.turn),
+                id: this.#id,
+                lastSave: new Date
+            })
+        )
+        
     }
 
  

@@ -5,7 +5,6 @@
     import GameInstance from "../lib/Game";
 
     import { screen } from "../lib/state";
-    import { get } from "svelte/store";
 
     let gameInstance: GameInstance | undefined = undefined
     let turn
@@ -21,6 +20,7 @@
         if(finished)
             return
 
+        gameInstance?.saveActive()
         console.log("Saving")
     }
 
