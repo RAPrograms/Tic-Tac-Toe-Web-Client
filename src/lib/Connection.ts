@@ -34,9 +34,9 @@ export default class ServerConnection{
         const id = (new Date).toISOString()
 
         this.#connection.send(JSON.stringify({
-            Id: id,
-            Method: method,
-            Data: data
+            id: id,
+            method: method,
+            data: data
         }))
 
         return new Promise<[any | undefined, string | null]>((resolve) => {

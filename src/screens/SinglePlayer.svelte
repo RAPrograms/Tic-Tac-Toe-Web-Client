@@ -55,7 +55,7 @@
             </h2>
         </header>
 
-        <Board instance={gameInstance} onCellSelect={saveGame} onFinish={() => {}} disabled={false} bind:this={boardInstance} />
+        <Board instance={gameInstance} onCellSelect={saveGame} onFinish={() => gameInstance?.deleteSave} disabled={false} bind:this={boardInstance} />
 
         <div class="bnt">
             <Button onclick={resetGame} enabled={true}>Restart</Button>
@@ -97,7 +97,7 @@
         left: 0;
     }
 
-    :global([data-menu="tic-tac-toe"]) :global(.board){
+    :global(.layout[data-menu="tic-tac-toe"]) :global(.board){
         flex-grow: 1;
         width: 100%;
     }
