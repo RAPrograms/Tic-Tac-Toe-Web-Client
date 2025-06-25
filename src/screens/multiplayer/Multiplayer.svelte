@@ -5,22 +5,16 @@
     import Button from "../../components/Button.svelte";
 
     import { screen } from "../../lib/state";
-   
-    interface ServerConfig{
-        MaxRoomInstances: number
-        MinRoomInstances: number
-        AllowUserCreateRooms: boolean
-    }
 
+    let ip: string | undefined
     let serverConfig: Promise<ServerConfig | null> | undefined = $state(undefined)
-
 
     function connectToServer(e: SubmitEvent){
         e.preventDefault()
 
         const form: HTMLFormElement = e.target as HTMLFormElement
         const input = form.querySelector("input")
-        const ip = input?.value
+        ip = input?.value
         if(ip == undefined || ip == "")
             return
 
@@ -72,8 +66,8 @@
         <MenuLayout title="Connect to Server" onExit={() => confirmChoise("Are you sure you want to cancel?", () => screen.set("main"))}>
             <LoadingIcon/>
         </MenuLayout>
-    {:then result} 
-        {#if result == undefined}
+    {:then config} 
+        {#if config == undefined}
             <MenuLayout title="Connect to Server" onExit={() => screen.set("main")}>
                 <section class="connection-form">
                     {@render connectionForm()}
@@ -81,7 +75,7 @@
                 </section>
             </MenuLayout>
         {:else}
-            <MultiplayerRooms/>   
+            <MultiplayerRooms ipAddress={ip!} serverConfig={config}/>   
         {/if}
     {/await}
 {/if}
