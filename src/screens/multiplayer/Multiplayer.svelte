@@ -1,9 +1,10 @@
 <script lang="ts">
-    import MenuLayout from "../components/MenuLayout.svelte";
-    import Button from "../components/Button.svelte";
-    import ServerConnection from "../lib/Connection";
+    import LoadingIcon from "../../components/LoadingIcon.svelte";
+    import MenuLayout from "../../components/MenuLayout.svelte";
+    import MultiplayerRooms from "./MultiplayerRooms.svelte";
+    import Button from "../../components/Button.svelte";
 
-    import { screen } from "../lib/state";
+    import { screen } from "../../lib/state";
    
     interface ServerConfig{
         MaxRoomInstances: number
@@ -11,8 +12,8 @@
         AllowUserCreateRooms: boolean
     }
 
-    let url: string | undefined
     let serverConfig: Promise<ServerConfig | null> | undefined = $state(undefined)
+
 
     function connectToServer(e: SubmitEvent){
         e.preventDefault()
@@ -35,14 +36,17 @@
 
                     
                     resolve(await res.json())
-                }, 400)
+                }, 600)
             } catch (error) {
                 return resolve(null)
             }
         })
-
     }
-    $effect(() => console.log(serverConfig));
+    
+    function confirmChoise(message: string, callback: () => void){
+        if(confirm(message))
+            callback()
+    }
 </script>
 
 {#snippet connectionForm()}
@@ -57,29 +61,31 @@
     </form>
 {/snippet}
 
-{#if serverConfig == undefined  || (serverConfig as any) instanceof Promise}
+{#if serverConfig == undefined}
     <MenuLayout title="Connect to Server" onExit={() => screen.set("main")}>
-
         <section class="connection-form">
-            {#if serverConfig == undefined}
-                {@render connectionForm()}
-            {:else}
-                {#await serverConfig}
-                    Connecting
-                {:then result} 
-                    {#if result == undefined}
-                        {@render connectionForm()}
-                        <b style="text-align: center">Unable to connect to server</b>
-                    {:else}
-                        {JSON.stringify(result, undefined, 4)}
-                    {/if}
-                {/await}
-            {/if}
+            {@render connectionForm()}
         </section>
     </MenuLayout>
 {:else}
-    Board
+    {#await serverConfig}
+        <MenuLayout title="Connect to Server" onExit={() => confirmChoise("Are you sure you want to cancel?", () => screen.set("main"))}>
+            <LoadingIcon/>
+        </MenuLayout>
+    {:then result} 
+        {#if result == undefined}
+            <MenuLayout title="Connect to Server" onExit={() => screen.set("main")}>
+                <section class="connection-form">
+                    {@render connectionForm()}
+                    <b style="text-align: center">Unable to connect to server</b>
+                </section>
+            </MenuLayout>
+        {:else}
+            <MultiplayerRooms/>   
+        {/if}
+    {/await}
 {/if}
+
 
 <style lang="scss">
     :global(.layout[data-menu="connect-to-server"]) > :global(section){

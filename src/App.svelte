@@ -4,7 +4,7 @@
     import MainMenu from "./screens/MainMenu.svelte";
     
     import { screen } from "./lib/state";
-    import Multiplayer from "./screens/Multiplayer.svelte";
+    import Multiplayer from "./screens/multiplayer/Multiplayer.svelte";
 </script>
 
 {#if $screen == "main"}
