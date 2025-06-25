@@ -5,6 +5,7 @@
 
     import { screen } from "../../lib/state";
     import LoadingIcon from "../../components/LoadingIcon.svelte";
+    import RoomCreationScreen from "../../components/RoomCreationScreen.svelte";
 
     interface roomsResponce{total: number, instances: Record<string, number>}
 
@@ -21,6 +22,8 @@
         })
     }
 
+    let roomCreationScreen: RoomCreationScreen
+
     let roomData: Promise<roomsResponce> = $state(getRooms())
     let allowRoomCreation = $derived(new Promise<boolean>(async(resolve) => {
         if(!serverConfig.AllowUserCreateRooms)
@@ -36,10 +39,21 @@
             console.log("reloaded")
         }, 180000)
     })
+
+    async function createRoom(){
+        const id = await roomCreationScreen.create(ipAddress)
+        if(id == null)
+            return
+
+        console.log(id)
+    }
 </script>
 
+<RoomCreationScreen bind:this={roomCreationScreen}/>
+
+
 <MenuLayout title="Rooms" onExit={() => screen.set("main")}>
-    <Button enabled={allowRoomCreation} onclick={() => {}}>Open Room</Button>
+    <Button enabled={allowRoomCreation} onclick={createRoom}>Open Room</Button>
     <br>
     {#await roomData}
         <LoadingIcon/>
@@ -70,8 +84,6 @@
             margin-top: 20px;
         }
     }
-
-
 
     button{
         box-shadow: 0 10px 5px -7px rgba(0, 0, 0, 0.3);

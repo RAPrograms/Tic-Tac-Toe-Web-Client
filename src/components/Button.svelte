@@ -34,12 +34,14 @@
         box-shadow: 0 10px 5px -7px rgba(0, 0, 0, 0.3);
         font-size: min(1rem, 20px);
         background-color: var(--colour, $primary);
+        box-sizing: border-box;
         border-radius: 10px;
         padding: 20px 30px;
         position: relative;
         font-weight: bold;
         overflow: hidden;
         border: none;
+        height: 60px;
         width: 100%;
 
         &:disabled{opacity: .7; }
