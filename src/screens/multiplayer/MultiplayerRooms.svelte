@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import Button from "../../components/Button.svelte";
-    import MenuLayout from "../../components/MenuLayout.svelte";
-
-    import { screen } from "../../lib/state";
+    import PromiseLoader from "../../components/PromiseLoader.svelte";
     import LoadingIcon from "../../components/LoadingIcon.svelte";
-    import RoomCreationScreen from "../../components/RoomCreationScreen.svelte";
+    import MenuLayout from "../../components/MenuLayout.svelte";
+    import Button from "../../components/Button.svelte";
+    
+    import { screen } from "../../lib/state";
+    import { onMount } from "svelte";
 
     interface roomsResponce{total: number, instances: Record<string, number>}
 
-    const { serverConfig, ipAddress } : { serverConfig: ServerConfig, ipAddress: string } = $props()
+    const { serverConfig, ipAddress, onSelection } : { serverConfig: ServerConfig, ipAddress: string, onSelection: (id: string) => void } = $props()
 
     function getRooms(): Promise<roomsResponce>{
         return new Promise<roomsResponce>(async(resolve) => {
@@ -22,7 +22,7 @@
         })
     }
 
-    let roomCreationScreen: RoomCreationScreen
+    let roomCreationScreen: PromiseLoader
 
     let roomData: Promise<roomsResponce> = $state(getRooms())
     let allowRoomCreation = $derived(new Promise<boolean>(async(resolve) => {
@@ -34,26 +34,37 @@
     }))
 
     onMount(() => {
-        setInterval(() => {
-            getRooms().then(data => roomData = Promise.resolve(data))
-            console.log("reloaded")
-        }, 180000)
+        setInterval(() => getRooms().then(data => roomData = Promise.resolve(data)), 180000)
     })
 
     async function createRoom(){
-        const id = await roomCreationScreen.create(ipAddress)
-        if(id == null)
-            return
+        const request = new Promise<string>((resolve, reject) => {
+            const protocol = (import.meta.env.PROD)? "https":"http"
+            const req = fetch(`${protocol}://${ipAddress}/room/create`, {method: "POST"})
 
-        console.log(id)
+            setTimeout(async () => {
+                const res = await req
+                if(!res.ok || res.status != 200)
+                    return reject("Unable to create room")
+            
+                resolve(await res.text())
+            }, 600)
+        })
+
+        roomCreationScreen.show(request)
+
+        try {
+            const id = await request
+            onSelection(id)
+        } catch (error) {}
     }
 </script>
 
-<RoomCreationScreen bind:this={roomCreationScreen}/>
+<PromiseLoader message="Creating room" bind:this={roomCreationScreen}/>
 
 
 <MenuLayout title="Rooms" onExit={() => screen.set("main")}>
-    <Button enabled={allowRoomCreation} onclick={createRoom}>Open Room</Button>
+    <Button enabled={allowRoomCreation} onclick={() => {createRoom()}}>Open Room</Button>
     <br>
     {#await roomData}
         <LoadingIcon/>
@@ -63,7 +74,7 @@
             <div>No open games found</div>
         {:else}
             {#each Object.entries(data.instances) as [id, playerCount]}
-                <button>
+                <button onclick={() => onSelection(id)}>
                     <div>{id}</div>
                     <div>{playerCount}</div>
                 </button>
