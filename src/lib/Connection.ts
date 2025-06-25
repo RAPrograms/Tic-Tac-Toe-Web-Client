@@ -45,22 +45,19 @@ export default class ServerConnection{
     }
 
     static open(uri: string){
-        return new Promise<ServerConnection | undefined>((resolve) => {
+        return new Promise<ServerConnection | undefined>((resolve, reject) => {
             try {
                 const socket = new WebSocket(uri)
 
                 socket.addEventListener("error", (e) => {
-                    console.warn("Unable to connect to server")
-                    resolve(undefined)
+                    reject("Unable to connect to room")
                 })
-
 
                 socket.addEventListener("open", () => {
                     resolve(new ServerConnection(socket))
                 })
             } catch (error) {
-                console.error(error)
-                resolve(undefined)
+                reject(error)
             }
         })
     }

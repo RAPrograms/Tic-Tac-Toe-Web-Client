@@ -1,13 +1,19 @@
 <script lang="ts">
+    import PromiseLoader from "../../components/PromiseLoader.svelte";
     import LoadingIcon from "../../components/LoadingIcon.svelte";
     import MenuLayout from "../../components/MenuLayout.svelte";
     import MultiplayerRooms from "./MultiplayerRooms.svelte";
+    import MultiplayerGame from "./MultiplayerGame.svelte";
     import Button from "../../components/Button.svelte";
 
     import { screen } from "../../lib/state";
+    import ServerConnection from "../../lib/Connection";
 
-    let ip: string | undefined
+    let wsConnectionScreen: PromiseLoader
+
+    let ip: string | undefined = $state()
     let serverConfig: Promise<ServerConfig | null> | undefined = $state(undefined)
+    let roomConnection: Promise<ServerConnection | undefined> | undefined | ServerConnection = $state(undefined)
 
     function connectToServer(e: SubmitEvent){
         e.preventDefault()
@@ -43,6 +49,8 @@
     }
 </script>
 
+<PromiseLoader bind:this={wsConnectionScreen} message="Connecting to room"/>
+
 {#snippet connectionForm()}
 	<form onsubmit={connectToServer}>
         <h1>Server IP</h1>
@@ -75,7 +83,17 @@
                 </section>
             </MenuLayout>
         {:else}
-            <MultiplayerRooms ipAddress={ip!} serverConfig={config}/>   
+            {#if roomConnection == undefined || roomConnection instanceof Promise}
+                <MultiplayerRooms ipAddress={ip!} serverConfig={config} onSelection={(id: string) => {
+                    const protocol = (import.meta.env.PROD)? "https":"http"
+                    roomConnection = ServerConnection.open(`${protocol}://${ip}/room/${id}`)
+                    wsConnectionScreen.show(roomConnection)
+
+                    roomConnection.then(connection => roomConnection = connection)
+                }}/>   
+            {:else}
+                <MultiplayerGame connection={roomConnection}/>
+            {/if}
         {/if}
     {/await}
 {/if}
