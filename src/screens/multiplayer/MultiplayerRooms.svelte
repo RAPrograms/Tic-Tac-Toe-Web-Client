@@ -4,8 +4,8 @@
     import MenuLayout from "../../components/MenuLayout.svelte";
     import Button from "../../components/Button.svelte";
     
+    import { onDestroy, onMount } from "svelte";
     import { screen } from "../../lib/state";
-    import { onMount } from "svelte";
 
     interface roomsResponce{total: number, instances: Record<string, number>}
 
@@ -23,6 +23,7 @@
     }
 
     let roomCreationScreen: PromiseLoader
+    let pooler: string | number | NodeJS.Timeout | undefined
 
     let roomData: Promise<roomsResponce> = $state(getRooms())
     let allowRoomCreation = $derived(new Promise<boolean>(async(resolve) => {
@@ -34,7 +35,10 @@
     }))
 
     onMount(() => {
-        setInterval(() => getRooms().then(data => roomData = Promise.resolve(data)), 180000)
+        pooler = setInterval(() => getRooms().then(data => roomData = Promise.resolve(data)), 180000)
+    })
+    onDestroy(() => {
+        clearInterval(pooler)
     })
 
     async function createRoom(){
