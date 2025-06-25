@@ -5,15 +5,28 @@
     import MultiplayerRooms from "./MultiplayerRooms.svelte";
     import MultiplayerGame from "./MultiplayerGame.svelte";
     import Button from "../../components/Button.svelte";
-
-    import { screen } from "../../lib/state";
     import ServerConnection from "../../lib/Connection";
+
+    import { httpProtocol, serverConnectPromise } from "../../lib/Multiplayer";
+    import { screen } from "../../lib/state";
+    import { onMount } from "svelte";
 
     let wsConnectionScreen: PromiseLoader
 
     let ip: string | undefined = $state()
     let serverConfig: Promise<ServerConfig | null> | undefined = $state(undefined)
     let roomConnection: Promise<ServerConnection | undefined> | undefined | ServerConnection = $state(undefined)
+
+
+    onMount(() => {
+        //@ts-ignore
+        const config = window.serverConfigPreload
+        if(!config)
+            return
+
+        serverConfig = Promise.resolve(config)
+        ip = new URLSearchParams(document.location.search).get("server")!
+    })
 
     function connectToServer(e: SubmitEvent){
         e.preventDefault()
@@ -25,22 +38,7 @@
             return
 
 
-        serverConfig = new Promise<ServerConfig | null>(async (resolve) => {
-            try {
-                const protocol = (import.meta.env.PROD)? "https":"http"
-                const res = await fetch(`${protocol}://${ip}/config`)
-
-                setTimeout(async () => {
-                    if(!res.ok)
-                        return resolve(null)
-
-                    
-                    resolve(await res.json())
-                }, 600)
-            } catch (error) {
-                return resolve(null)
-            }
-        })
+        serverConfig = serverConnectPromise(ip)
     }
     
     function confirmChoise(message: string, callback: () => void){
@@ -85,8 +83,7 @@
         {:else}
             {#if roomConnection == undefined || roomConnection instanceof Promise}
                 <MultiplayerRooms ipAddress={ip!} serverConfig={config} onSelection={(id: string) => {
-                    const protocol = (import.meta.env.PROD)? "https":"http"
-                    roomConnection = ServerConnection.open(`${protocol}://${ip}/room/${id}`)
+                    roomConnection = ServerConnection.open(`${httpProtocol}://${ip}/room/${id}`)
                     wsConnectionScreen.show(roomConnection)
 
                     roomConnection.then(connection => roomConnection = connection)

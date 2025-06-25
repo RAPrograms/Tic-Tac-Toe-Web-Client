@@ -4,6 +4,7 @@
     import MenuLayout from "../../components/MenuLayout.svelte";
     import Button from "../../components/Button.svelte";
     
+    import { httpProtocol } from "../../lib/Multiplayer";
     import { onDestroy, onMount } from "svelte";
     import { screen } from "../../lib/state";
 
@@ -13,8 +14,7 @@
 
     function getRooms(): Promise<roomsResponce>{
         return new Promise<roomsResponce>(async(resolve) => {
-            const protocol = (import.meta.env.PROD)? "https":"http"
-            const res = await fetch(`${protocol}://${ipAddress}/rooms`)
+            const res = await fetch(`${httpProtocol}://${ipAddress}/rooms`)
             if(!res.ok)
                 return resolve({total: 0, instances: {}})
 
@@ -43,8 +43,7 @@
 
     async function createRoom(){
         const request = new Promise<string>((resolve, reject) => {
-            const protocol = (import.meta.env.PROD)? "https":"http"
-            const req = fetch(`${protocol}://${ipAddress}/room/create`, {method: "POST"})
+            const req = fetch(`${httpProtocol}://${ipAddress}/room/create`, {method: "POST"})
 
             setTimeout(async () => {
                 const res = await req
