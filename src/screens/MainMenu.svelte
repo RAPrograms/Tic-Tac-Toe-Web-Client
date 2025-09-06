@@ -13,7 +13,7 @@
     </header>
     <main>
         <Button onclick={() => {screen.set("singleplayer")}} enabled={true}>Singleplayer</Button>
-        <Button onclick={() => {screen.set("multiplayer")}} enabled={true}>Multiplayer</Button>
+        <Button onclick={() => {screen.set("multiplayer")}} enabled={false}>Multiplayer</Button>
         <br>
         <Button onclick={() => {screen.set("settings")}} enabled={true}>Settings</Button>
         <a class="credit" href="https://github.com/RAPrograms/Tic-Tac-Toe-Web-Client" target="_blank" rel="noopener noreferrer">RAPrograms</a>
