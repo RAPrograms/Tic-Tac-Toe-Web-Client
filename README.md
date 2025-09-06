@@ -1,5 +1,5 @@
 # Tik Tac Toe #️⃣
-A web based tic tac toe game
+A web based tic tac toe game. [Play Here](https://raprograms.github.io/Tic-Tac-Toe-Web-Client/)
 
 <img width="1279" alt="Game Screenshot" src="https://github.com/user-attachments/assets/740b70e9-904c-4e76-9bc0-1255a83fac7e" />
 
